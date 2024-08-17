@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "6xJYs+szF6YTSGlozbqG40uHYc/0se5sNpq2nrkWZfs=",
+  "Source": "EBMSApp",
+  "BasePath": "_content/EBMSApp",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
