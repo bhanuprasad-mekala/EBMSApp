@@ -1,0 +1,95 @@
+<div *ngIf="isadmin">
+    <div class="d-flex justify-content-end mb-3 mt-3">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCustomer">
+            <fa-icon [icon]="faPlus"></fa-icon>
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="paymentForm">
+                        <div class="mb-3">
+                            <label for="CustomerID" class="form-label">Customer Name</label>
+                            <select id="CustomerID" class="form-control" formControlName="customerId" (change)="getBills()">
+                                <!-- <option [defaultSelected]="true">Select Customer</option> -->
+                                <option *ngFor="let customer of customers" [value]="customer.customerId">
+                                    {{customer.firstName}},
+                                    {{customer.lastName}}</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Year" class="form-label">Year</label>
+                            <select id="Year" class="form-control" formControlName="year" (change)="getMonth()">
+                                <!-- <option [defaultSelected]="true">Select Customer</option> -->
+                                <option *ngFor="let bill of bills" [value]="bill.year">{{bill.year}}</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Month" class="form-label">Month</label>
+                            <select id="Month" class="form-control" formControlName="month">
+                                <!-- <option [defaultSelected]="true">Select Customer</option> -->
+                                <option *ngFor="let month of months" [value]="month">{{month}}</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="paymentType" class="form-label">Payment Type</label>
+                            <select id="paymentType" class="form-control" formControlName="paymentType">
+                                <!-- <option [defaultSelected]="true">Select Customer</option> -->
+                                <option *ngFor="let paymentType of paymentTypes" [value]="paymentType">{{paymentType}}</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amountPaid" class="form-label">Amount</label>
+                            <input type="text" id="amountPaid" class="form-control" formControlName="amountPaid">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
+                    <button type="button" class="btn btn-warning" (click)="clearForm()">Clear</button>
+                    <button type="submit" class="btn btn-primary" (click)="onSubmit()">Pay Bill</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-stripped text-center">
+    <thead>
+        <tr>
+            <th>Payment ID</th>
+            <th>Customer Name</th>
+            <th>Month</th>
+            <th>Year</th>
+            <th>Payment Type</th>
+            <th>Amount</th>
+            <th>Date Time</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let payment of payments; let i = index">
+            <td>{{payment.paymentID}}</td>
+            <td>{{payment.customerName}}</td>
+            <td>{{payment.month}}</td>
+            <td>{{payment.year}}</td>
+            <td>{{payment.paymentType}}</td>
+            <td>{{payment.amount}}</td>
+            <td>{{payment.paymentDateTime | date:"dd-MM-yyyy hh:mm:ss"}}</td>
+            <td>{{payment.status}}</td>
+            <td>
+                <button class="btn btn-success" (click)="download(i)">
+                    <fa-icon [icon]="faDownload"></fa-icon>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

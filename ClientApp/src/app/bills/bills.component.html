@@ -1,0 +1,180 @@
+<div *ngIf="isAdmin">
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCustomer">
+      <fa-icon [icon]="faPlus"></fa-icon>
+    </button>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="addCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel" *ngIf="!isUpdate">Add Customer</h5>
+          <h5 class="modal-title" id="exampleModalLabel" *ngIf="isUpdate">Edit Customer</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="billForm">
+            <div class="mb-3" *ngIf="isUpdate">
+              <label for="billId" class="form-label">Bill ID</label>
+              <input type="number" id="billId" class="form-control" formControlName="BillID"
+                placeholder="Enter Customer ID">
+            </div>
+            <div class="mb-3">
+              <label for="CustomerID" class="form-label">Customer Name</label>
+              <select id="CustomerID" class="form-control" formControlName="CustomerID">
+                <!-- <option [defaultSelected]="true">Select Customer</option> -->
+                <option *ngFor="let customer of customers" [value]="customer.customerId">{{customer.firstName}},
+                  {{customer.lastName}}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="Year" class="form-label">Year</label>
+              <select id="Year" class="form-control" formControlName="Year" (change)="loadMonths()">
+                <!-- <option [defaultSelected]="true">Select Customer</option> -->
+                <option *ngFor="let year of years" [value]="year">{{year}}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="Month" class="form-label">Month</label>
+              <select id="Month" class="form-control" formControlName="Month">
+                <!-- <option [defaultSelected]="true">Select Customer</option> -->
+                <option *ngFor="let month of months" [value]="month">{{month}}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="NoOfUnits" class="form-label">Units Consumed</label>
+              <input type="text" id="NoOfUnits" class="form-control" formControlName="NoOfUnits"
+                (change)="CalculateBill()">
+            </div>
+            <div class="mb-3">
+              <label for="TotalAmount" class="form-label">Total Amount</label>
+              <input type="text" id="TotalAmount" class="form-control" formControlName="TotalAmount">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
+          <button type="button" class="btn btn-warning" (click)="clearForm()" *ngIf="!isUpdate">Clear</button>
+          <button type="submit" class="btn btn-primary" (click)="onSubmit()" *ngIf="!isUpdate">Add Customer</button>
+          <button type="submit" class="btn btn-primary" (click)="UpdateCustomer()" *ngIf="isUpdate">Update
+            Customer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="table table-striped table-hover text-center">
+    <thead>
+      <tr>
+        <th>Bill ID</th>
+        <th>Customer ID</th>
+        <th>Year</th>
+        <th>Month</th>
+        <th>Units Consumed</th>
+        <th>Total Amount</th>
+        <th>Remaining</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let bill of bills; let i = index">
+        <td>{{ bill.billId }}</td>
+        <td>{{ bill.customerId }}</td>
+        <td>{{ bill.year }}</td>
+        <td>{{ bill.month }}</td>
+        <td>{{ bill.noOfUnits }}</td>
+        <td>{{ bill.totalAmount }}</td>
+        <td>{{bill.unpaisAmount}}</td>
+        <td>
+          <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addCustomer" (click)="editCustomer(i)"
+            [disabled]="bill.unpaisAmount != bill.totalAmount">
+            <fa-icon [icon]="faEdit"></fa-icon>
+          </button>&nbsp;
+          <button class="btn btn-danger" (click)="deleteCustomer(bill.billId)" [disabled]="bill.unpaisAmount==0">
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </button>&nbsp;
+          <button class="btn btn-success" (click)="Download(i)">
+            <fa-icon [icon]="faDownload"></fa-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div *ngIf="!isAdmin">
+
+  <div class="modal fade" id="addCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel" *ngIf="!isUpdate">Bill Payment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="paymentForm">
+            <div class="mb-3">
+              <label for="billId" class="form-label">Bill ID</label>
+              <input type="number" id="billId" class="form-control" formControlName="BillID"
+                placeholder="Enter Customer ID">
+            </div>
+            <div class="mb-3">
+              <label for="paymentType" class="form-label">Payment Type</label>
+              <select id="paymentType" class="form-control" formControlName="paymentType">
+                <!-- <option [defaultSelected]="true">Select Customer</option> -->
+                <option *ngFor="let payment of paymentTypes" [value]="payment">{{payment}}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="AmountPaid" class="form-label">Amount</label>
+              <input type="text" id="AmountPaid" class="form-control" formControlName="AmountPaid"
+                placeholder="Enter Amount">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
+          <button type="button" class="btn btn-warning" (click)="clearForm()">Clear</button>
+          <button type="submit" class="btn btn-primary" (click)="PayBill()">Pay Bill</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="table table-striped table-hover text-center">
+    <thead>
+      <tr>
+        <th>Bill ID</th>
+        <th>Customer ID</th>
+        <th>Year</th>
+        <th>Month</th>
+        <th>Units Consumed</th>
+        <th>Total Amount</th>
+        <th>Remaining</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let bill of bills; let i = index">
+        <td>{{ bill.billId }}</td>
+        <td>{{ bill.customerId }}</td>
+        <td>{{ bill.year }}</td>
+        <td>{{ bill.month }}</td>
+        <td>{{ bill.noOfUnits }}</td>
+        <td>{{ bill.totalAmount }}</td>
+        <td>{{bill.unpaisAmount}}</td>
+        <td>
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCustomer"
+            [disabled]="bill.unpaisAmount==0" (click)="editCustomer(i)"><fa-icon
+              [icon]="faMoneyBill"></fa-icon></button>&nbsp;
+          <button class="btn btn-success" (click)="Download(i)">
+            <fa-icon [icon]="faDownload"></fa-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

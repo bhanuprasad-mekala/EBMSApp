@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-primary text-white">
+  <a class="navbar-brand text-white" style="margin-left: 1%;" href="/">Electric Billing Management System</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="row w-100" style="margin: 0% 2%;">
+    <div class="col-md-12">
+      <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" [ngClass]="{ show: isExpanded }">
+        <ul class="navbar-nav flex-grow-1">
+          <li class="nav-item flex-fill" *ngIf="isAdmin && isLogged" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-white" [routerLink]="['/customer']">Customers</a>
+          </li>
+          <li class="nav-item flex-fill" *ngIf="isAdmin && isLogged" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-white" [routerLink]="['/bills']">Bills</a>
+          </li>
+          <li class="nav-item flex-fill" *ngIf="isAdmin && isLogged" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-white" [routerLink]="['/payment']">Payments</a>
+          </li>
+          <li class="nav-item flex-fill" *ngIf="!isAdmin && isLogged" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-white" [routerLink]="['/bills']">View & Pay Bills</a>
+          </li>
+          <li class="nav-item flex-fill" *ngIf="!isAdmin && isLogged" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-white" [routerLink]="['/payment']">Payment History</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-white" [routerLink]="['/login']" *ngIf="!isLogged">Login</a>
+            <a class="nav-link text-white" (click)="logout()" *ngIf="isLogged">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
