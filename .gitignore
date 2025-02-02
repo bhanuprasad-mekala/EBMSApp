@@ -232,4 +232,3 @@ _Pvt_Extensions
 
 ClientApp/.angular
 ClientApp/node_modules
-ClientApp/package-lock.json
