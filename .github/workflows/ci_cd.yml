@@ -14,24 +14,24 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
+    # strategy:
+    #   matrix:
+    #     node-version: [18.x]
 
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: '**/package-lock.json'
-    - name: Install dependencies
-      run: npm ci
-      working-directory: ./ClientApp
-    - name: Build project
-      run: npm run build --if-present
-      working-directory: ./ClientApp
+    # - name: Use Node.js ${{ matrix.node-version }}
+    #   uses: actions/setup-node@v4
+    #   with:
+    #     node-version: ${{ matrix.node-version }}
+    #     cache: 'npm'
+    #     cache-dependency-path: '**/package-lock.json'
+    # - name: Install dependencies
+    #   run: npm ci
+    #   working-directory: ./ClientApp
+    # - name: Build project
+    #   run: npm run build --if-present
+    #   working-directory: ./ClientApp
     #- run: npm test
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
